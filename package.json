@@ -1,0 +1,32 @@
+{
+  "name": "ei-ebooks",
+  "version": "0.0.0",
+  "main": "dist/app.js",
+  "author": "Gabriel Henrique da Silva <gabriel04gh1.gh@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node -e require('./dist/main').main()",
+    "build": "tsc"
+  },
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "firebase": "^9.15.0",
+    "firebase-admin": "^11.4.1",
+    "helmet": "^6.0.1",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
+    "@types/helmet": "^4.0.0",
+    "nodemon": "^2.0.20"
+  }
+}

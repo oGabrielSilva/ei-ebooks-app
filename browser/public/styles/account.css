@@ -1,0 +1,90 @@
+#root-sign {
+  padding: 2rem 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  min-height: 90vh;
+}
+
+#root-sign h1 {
+  font-size: 1.7em;
+  font-weight: 400;
+}
+
+#root-sign h2 {
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+#root-sign .root {
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#root-sign .root .sign-up-container {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+#root-sign .root .sign-up-container a {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--variant-color);
+  transform: translateY(1px);
+}
+
+#root-sign .root .sign-up-container a:hover {
+  color: var(--variant-color);
+}
+
+#root-sign .root form {
+  width: 100%;
+  border-top: var(--soft-border);
+}
+
+#root-sign .root form .form-element {
+  padding: 0.5rem;
+  border-bottom: var(--soft-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#root-sign .root form .form-element:last-of-type {
+  border: none;
+}
+
+#root-sign .root form .form-element small {
+  margin-top: 0.2rem;
+  color: var(--error-color);
+  padding-left: 0.2rem;
+}
+
+#root-sign .root form .form-element p,
+#root-sign .root form .form-element a {
+  padding: 0.5rem 0.2rem 0 0;
+}
+
+#root-sign .root form .form-element small,
+#root-sign .root form .form-element input,
+#root-sign .root form .form-element label {
+  display: inline-block;
+  width: 90%;
+  text-align: start;
+}
+
+#root-sign .root form img {
+  cursor: pointer;
+  border: var(--soft-border);
+  border-radius: 100%;
+  width: 70px;
+  border-width: 2px;
+  height: 70px;
+}

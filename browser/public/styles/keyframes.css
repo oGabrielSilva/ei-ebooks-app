@@ -1,0 +1,5 @@
+@keyframes indicator {
+  to {
+    transform: rotateZ(360deg);
+  }
+}
