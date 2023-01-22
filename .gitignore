@@ -4,7 +4,7 @@
 #My
 bundle.js
 dist/
-firebase.*
+firebase.json
 
 ### Node ###
 # Logs
