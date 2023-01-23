@@ -1,26 +1,32 @@
 import Constants from '../constants/Constants';
 
 export default class AuthMiddleware {
-  public static middleware(
+  public static async middleware(
     req: ExpressRequest,
     res: ExpressResponse,
     next: ExpressNext
   ) {
-    const token = req.cookies[Constants.FIREBASE_COOKIE_TOKEN];
-    if (
-      (!token || typeof token !== 'string') &&
-      req.path !== '/sign-up' &&
-      req.path !== '/sign-in'
-    ) {
-      res.clearCookie(Constants.FIREBASE_COOKIE_TOKEN);
-      res.render('sign-in', {
-        title: Constants.APP_NAME.concat(' - Entrar'),
-        lang:
-          req.cookies[Constants.COOKIE_LANG] ??
-          Constants.APP_DISPLAY_LANGUAGES.ptBR,
-      });
-      return;
+    try {
+      let authenticated = false;
+      const uid = req.cookies[Constants.FIREBASE_COOKIE_UID];
+      const token = req.cookies[Constants.FIREBASE_COOKIE_TOKEN];
+      if (
+        !!uid &&
+        !!token &&
+        typeof uid === 'string' &&
+        typeof token === 'string'
+      ) {
+        const firebase = req.app.get(Constants.FIREBASE_NAME) as F;
+        const verifyIdToken = await firebase.getAuth().verifyIdToken(token);
+        authenticated = !!verifyIdToken && verifyIdToken.uid === uid;
+      }
+      res.locals.authenticated = authenticated;
+      next();
+    } catch (error) {
+      console.log('HERE');
+      console.log(error);
+      res.locals.authenticated = false;
+      next();
     }
-    next();
   }
 }

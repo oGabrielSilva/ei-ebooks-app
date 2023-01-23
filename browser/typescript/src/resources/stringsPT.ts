@@ -27,4 +27,7 @@ export const stringsPT = {
   internalError: 'Erro interno',
   emailAlreadyExists: 'Email já está em uso',
   userNotFound: 'Usuário não encontrado! Crie uma conta',
+  profileWarning: 'Selecione uma imagem para o seu perfil',
 };
+
+export type TypeOfStrings = typeof stringsPT;

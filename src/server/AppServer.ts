@@ -10,6 +10,8 @@ import ErrorHandling from '../middleware/ErrorHandling';
 import Constants from '../constants/Constants';
 import ConsoleMiddleware from '../middleware/ConsoleMiddleware';
 import GlobalCookiesMiddleware from '../middleware/GlobalCookiesMiddleware';
+import Exception from '../errors/Exception';
+import { EnumStatusCode } from '../constants/EnumStatusCode';
 
 export default class AppServer {
   private readonly app: Express;
@@ -47,7 +49,6 @@ export default class AppServer {
     this.app.use(cookieParser(process.env.COOKIE_SECRET));
     this.app.use(express.static(staticPath));
     this.app.use(ConsoleMiddleware.middleware);
-    this.app.use(ErrorHandling.catchError);
     this.app.use(GlobalCookiesMiddleware.middleware);
   }
 
@@ -57,5 +58,6 @@ export default class AppServer {
 
   private setRoutes() {
     this.app.use(routes());
+    this.app.use(ErrorHandling.catchError);
   }
 }

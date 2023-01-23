@@ -4,6 +4,9 @@ import {
   Auth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateProfile,
+  deleteUser,
+  signOut,
 } from 'firebase/auth';
 import firebaseConfig from '../json/firebase.json';
 
@@ -30,6 +33,18 @@ export default class Firebase {
       email.trim(),
       password.trim()
     );
+  }
+
+  public updateUser(displayName: string, photoURL: string) {
+    return updateProfile(this.auth.currentUser, { displayName, photoURL });
+  }
+
+  public deleteUser() {
+    deleteUser(this.auth.currentUser);
+  }
+
+  public signOut() {
+    signOut(this.auth);
   }
 
   public static getModule() {

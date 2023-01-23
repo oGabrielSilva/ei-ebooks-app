@@ -7,6 +7,8 @@ import { emailIsValid } from '../utils/emailValidation';
 import DisplayStringController from './DisplayStringController';
 import { FirebaseError } from 'firebase/app';
 import { responseErrorsCode } from '../constants/responseErrorsCode';
+import { TypeOfStrings } from '../resources/stringsPT';
+import Fetch from '../modules/Fetch';
 
 export default class SignInController {
   protected readonly form: HTMLFormElement;
@@ -32,6 +34,7 @@ export default class SignInController {
     this.setEmailInput();
     this.setPasswordInput();
     this.setFormSubmit();
+    this.firebase.signOut();
   }
 
   protected setFormSubmit() {
@@ -40,42 +43,41 @@ export default class SignInController {
 
   protected onSubmit(e: SubmitEvent) {
     e.preventDefault();
-    const emailInput = this.emailInput;
+    const { emailInput } = this;
     const strings = DisplayStringController.getStrings();
     this.popup.show(
       new PopupModel(strings.wait, null, null, false, true, false)
     );
-    if (!emailIsValid(this.user.getEmail())) {
-      return this.popup.update(
-        new PopupModel(
-          strings.oopss,
-          strings.emailSmall,
-          strings.ok,
-          true,
-          false,
-          true,
-          () => emailInput.focus()
-        )
-      );
-    }
-    if (this.user.getPassword().length < 8) {
-      const passwordInput = this.passwordInput;
-      return this.popup.update(
-        new PopupModel(
-          strings.oopss,
-          strings.passwordSmall,
-          strings.ok,
-          true,
-          false,
-          true,
-          () => passwordInput.focus()
-        )
-      );
-    }
+    const success = this.startFormValidationWithEmailAndPassword(
+      strings,
+      emailInput
+    );
+    if (!success) return;
     this.firebase
       .signIn(this.user.getEmail(), this.user.getPassword())
-      .then((user) => {
-        if (!!user) window.location.href = '/';
+      .then(async ({ user }) => {
+        if (!!user) {
+          const token = await user.getIdToken(true);
+          const { uid } = user;
+          const { response } = await Fetch.post(
+            '/api/sign-in',
+            JSON.stringify({ token, uid })
+          );
+          if (!response.ok) {
+            this.popup.update(
+              new PopupModel(
+                strings.internalError,
+                '',
+                strings.ok,
+                false,
+                false,
+                true
+              )
+            );
+            return;
+          }
+          window.location.href = '/';
+        }
       })
       .catch((e) => {
         if (
@@ -83,18 +85,6 @@ export default class SignInController {
           responseErrorsCode.getArray().includes(e.code)
         ) {
           switch (e.code) {
-            case responseErrorsCode.emailAlreadyExists:
-              return this.popup.update(
-                new PopupModel(
-                  strings.emailAlreadyExists,
-                  '',
-                  strings.ok,
-                  false,
-                  false,
-                  true,
-                  () => emailInput.focus()
-                )
-              );
             case responseErrorsCode.invalidEmail:
               return this.popup.update(
                 new PopupModel(
@@ -143,6 +133,43 @@ export default class SignInController {
           )
         );
       });
+  }
+
+  protected startFormValidationWithEmailAndPassword(
+    strings: TypeOfStrings,
+    emailInput: HTMLInputElement
+  ) {
+    let success = true;
+    if (!emailIsValid(this.user.getEmail())) {
+      this.popup.update(
+        new PopupModel(
+          strings.oopss,
+          strings.emailSmall,
+          strings.ok,
+          true,
+          false,
+          true,
+          () => emailInput.focus()
+        )
+      );
+      success = false;
+    }
+    if (this.user.getPassword().length < 8) {
+      const { passwordInput } = this;
+      this.popup.update(
+        new PopupModel(
+          strings.oopss,
+          strings.passwordSmall,
+          strings.ok,
+          true,
+          false,
+          true,
+          () => passwordInput.focus()
+        )
+      );
+      success = false;
+    }
+    return success;
   }
 
   protected setEmailInput() {

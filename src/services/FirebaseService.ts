@@ -42,8 +42,11 @@ export default class FirebaseService {
     return this.storage;
   }
 
-  public async uploadString(id: string, path: string, data: string) {
-    const storageRef = ref(this.getStorage(), path.concat(id));
+  public async uploadString(uid: string, path: string, data: string) {
+    const storageRef = ref(
+      this.getStorage(),
+      path.concat(path.endsWith('/') ? uid : '/'.concat(uid))
+    );
     await uploadString(storageRef, data, 'data_url');
     return await getDownloadURL(storageRef);
   }

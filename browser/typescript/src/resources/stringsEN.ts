@@ -26,4 +26,5 @@ export const stringsEN = {
   internalError: 'Internal error',
   wait: 'Wait a moment...',
   userNotFound: 'User not found! Create an account',
+  profileWarning: 'Select an image for your profile',
 };

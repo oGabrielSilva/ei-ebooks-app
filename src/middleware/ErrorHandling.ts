@@ -21,6 +21,6 @@ export default class ErrorHandling {
         message: EnumStatusCode[EnumStatusCode.INTERNAL_SERVER_ERROR],
       });
     }
-    next();
+    next(error);
   }
 }

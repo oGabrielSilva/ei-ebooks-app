@@ -2,8 +2,12 @@ import Constants from '../constants/Constants';
 
 export default class IndexController {
   public static async get(req: ExpressRequest, res: ExpressResponse) {
-    const firebase = req.app.get(Constants.FIREBASE_NAME) as F;
-    res.status(200);
+    const { authenticated } = res.locals;
+    if (authenticated) {
+      res.render('home');
+      return;
+    }
+    res.render('sign-in');
   }
 
   public static async signUp(req: ExpressRequest, res: ExpressResponse) {
